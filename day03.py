@@ -14,23 +14,19 @@ def format_input(inp: list[str]):
         banks.append([int(v) for v in line.rstrip()])
     return banks
 
+def find_highest_jolts(bank, digits):
+    if digits == 1:
+        return max(bank)
+    highest_possible = max(bank[:len(bank) + 1 - digits])
+    return int(str(highest_possible) + str(find_highest_jolts(bank[bank.index(highest_possible) + 1:], digits - 1)))
+
 def solve(inp: list[list[int]], part, example):
     tot = 0
     for bank in inp:
-        highest = max(bank)
-        if bank.index(highest) == len(bank) - 1:
-            for v in range(highest - 1, 0, -1):
-                if v in bank:
-                    tot += int(str(v) + str(highest))
-                    break
+        if part == 1:
+            tot += find_highest_jolts(bank, 2)
         else:
-            if bank.count(highest) > 1:
-                tot += int(str(highest) + str(highest))
-            else:
-                for v in range(highest - 1, 0, -1):
-                    if v in bank[bank.index(highest) + 1:]:
-                        tot += int(str(highest) + str(v))
-                        break
+            tot += find_highest_jolts(bank, 12)
     return tot
 
 def main():
