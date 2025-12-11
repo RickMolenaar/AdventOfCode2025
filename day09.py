@@ -34,12 +34,15 @@ def solve(inp, part, example):
                          (True,  True ): (999_999, 999_999)}
             
         for p2 in inp[i+1:]:
+            dx, dy = p1[0] - p2[0], p1[1] - p2[1]
+            area = (abs(dx) + 1) * (abs(dy) + 1)
+            if area <= max_area:
+                continue
             min_x = min(p1[0], p2[0])
             max_x = max(p1[0], p2[0])
             min_y = min(p1[1], p2[1])
             max_y = max(p1[1], p2[1])
             valid = True
-            dx, dy = p1[0] - p2[0], p1[1] - p2[1]
             quadrant = (dx > 0, dy > 0)
             if part == 2:
                 max_dist = max_distances[quadrant]
@@ -49,15 +52,13 @@ def solve(inp, part, example):
                     for ye in edges[xe]:
                         if min_y < ye < max_y:
                             valid = False
-                            if abs(dx) <= max_dist[0] and abs(dy) <= max_dist[1]:
-                                max_distances[quadrant] = (abs(dx), abs(dy))
+                            if abs(p1[0] - xe) <= max_dist[0] and abs(p1[1] - ye) <= max_dist[1]:
+                                max_distances[quadrant] = (abs(p1[0] - xe), abs(p1[1] - ye))
                             break
                     if not valid:
                         break
             if valid:
-                area = (abs(dx) + 1) * (abs(dy) + 1)
-                if area > max_area:
-                    max_area = area
+                max_area = area
     return max_area
     
 
